@@ -69,7 +69,6 @@ SET(VAR_muhkuh_app_headers
 	muhkuh_repository_manager.h
 	muhkuh_split_testdescription.h
 	muhkuh_testTreeItemData.h
-	muhkuh_version.h
 	muhkuh_wrap_xml.h
 	readFsFile.h
 )
