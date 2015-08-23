@@ -332,6 +332,8 @@ void muhkuh_mainFrame::createMenu(void)
 	ptMenuItem = new wxMenuItem(ptMenuHelp, muhkuh_mainFrame_menuShowTip, _("Show Tip"), _("Show some tips about Muhkuh"));
 	ptMenuItem->SetBitmap(icon_famfamfam_silk_lightbulb);
 	ptMenuHelp->Append(ptMenuItem);
+	/* Only enable this menu entry if the tip provider exists. */
+	ptMenuItem->Enable(m_tipProvider!=NULL);
 
 	m_ptMenuBar = new wxMenuBar;
 	m_ptMenuBar->Append(ptMenuFile, _("&File"));
@@ -397,9 +399,22 @@ void muhkuh_mainFrame::createControls(void)
 
 void muhkuh_mainFrame::createTipProvider(void)
 {
-	// create the tip provider
-	// TODO: check if the tips.txt file exists
-	m_tipProvider = wxCreateFileTipProvider(wxT("muhkuh_tips.txt"), m_sizStartupTipsIdx);
+	wxFileName tFileName;
+	bool fTipsExists;
+
+
+	/* Check if the tips.txt file exists. It mus be in the applications data dir. */
+	tFileName.Assign(wxStandardPaths::Get().GetDataDir(), "muhkuh_tips.txt", wxPATH_NATIVE);
+	fTipsExists = tFileName.IsFileReadable();
+	if( fTipsExists==true )
+	{
+		/* Create the tip provider. */
+		m_tipProvider = wxCreateFileTipProvider(wxT("muhkuh_tips.txt"), m_sizStartupTipsIdx);
+	}
+	else
+	{
+		wxLogWarning(_("Failed to open tips. The file '%s' does not exist."), tFileName.GetPath(wxPATH_GET_VOLUME));
+	}
 }
 
 
