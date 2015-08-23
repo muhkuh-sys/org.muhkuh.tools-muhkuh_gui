@@ -26,10 +26,7 @@
 #include <wx/filename.h>
 #include <wx/xml/xml.h>
 
-
-#if USE_LUA!=0
-#       include "lua.hpp"
-#endif
+#include "lua.hpp"
 
 
 #ifndef __MUHKUH_PLUGIN_H__

@@ -21,9 +21,7 @@
 
 #include "muhkuh_plugin.h"
 
-#if USE_LUA!=0
-#       include "muhkuh_lua.h"
-#endif
+#include "muhkuh_lua.h"
 
 #include <wx/file.h>
 #include <wx/log.h>
@@ -233,8 +231,6 @@ bool muhkuh_plugin::openXml(wxString strXmlPath)
 				}
 				else
 				{
-
-#if USE_LUA!=0
 					/* Get the lua node. */
 					ptChildNode = find_child_node(ptMuhkuhNode->GetChildren(), wxT("Lua"));
 					if( ptChildNode!=NULL )
@@ -242,8 +238,7 @@ bool muhkuh_plugin::openXml(wxString strXmlPath)
 						/* Get the lua module name. */
 						strLuaModuleName = ptChildNode->GetNodeContent();
 					}
-#endif
-
+					
 					/* Get the version node. */
 					ptChildNode = find_child_node(ptMuhkuhNode->GetChildren(), wxT("Version"));
 					/* Found the node? */
@@ -315,7 +310,6 @@ bool muhkuh_plugin::Load(wxString strPluginCfgPath)
 {
 	bool fResult;
 	wxString strLuaMessage;
-#if USE_LUA!=0
 	int iResult;
 	lua_State *ptLuaState;
 	wxString strLuaCode;
@@ -379,12 +373,6 @@ bool muhkuh_plugin::Load(wxString strPluginCfgPath)
 			lua_close(ptLuaState);
 		}
 	}
-#else
-	strLuaMessage = "ERROR: can not load lua plugin. No lua support built in.";
-	setInitError(strLuaMessage, strPluginCfgPath);
-	wxLogError(strLuaMessage);
-	fResult = false;
-#endif
 
 	return fResult;
 }
