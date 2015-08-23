@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Christoph Thelen                                *
+ *   Copyright (C) 2015 by Christoph Thelen                                *
  *   doc_bacardi@users.sourceforge.net                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -33,19 +33,19 @@
 // Muhkuh needs several wx features
 
 #if !wxUSE_THREADS
-	#error "This tool requires thread support!"
+        #error "This tool requires thread support!"
 #endif
 
 #if !wxUSE_STREAMS
-	#error "This tool requires stream support!"
+        #error "This tool requires stream support!"
 #endif
 
 #if !wxUSE_ZIPSTREAM
-	#error "This tool requires zipstream support!"
+        #error "This tool requires zipstream support!"
 #endif
 
 #if !wxUSE_ZLIB
-	#error "This tool requires zlib support!"
+        #error "This tool requires zlib support!"
 #endif
 
 //-------------------------------------

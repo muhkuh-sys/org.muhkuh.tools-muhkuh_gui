@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Christoph Thelen                                *
+ *   Copyright (C) 2015 by Christoph Thelen                                *
  *   doc_bacardi@users.sourceforge.net                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,6 @@
 #include <wx/app.h>
 #include <wx/config.h>
 #include <wx/fileconf.h>
-#include <wx/filename.h>
 
 
 #include "muhkuh_mainFrame.h"
@@ -44,5 +43,5 @@ public:
 
 DECLARE_APP(muhkuh_app);
 
-#endif	// __MUHKUH_APP_H__
+#endif  /* __MUHKUH_APP_H__ */
 
