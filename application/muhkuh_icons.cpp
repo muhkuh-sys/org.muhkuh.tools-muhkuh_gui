@@ -21,10 +21,10 @@
 #include "muhkuh_icons.h"
 
 
-#include "icons/custom/muhkuh_016.xpm"
-#include "icons/custom/muhkuh_032.xpm"
-#include "icons/custom/muhkuh_064.xpm"
-#include "icons/custom/muhkuh_128.xpm"
+#include "icons/muhkuh/muhkuh_016.xpm"
+#include "icons/muhkuh/muhkuh_032.xpm"
+#include "icons/muhkuh/muhkuh_064.xpm"
+#include "icons/muhkuh/muhkuh_128.xpm"
 
 #include "icons/famfamfam_silk_icons_v013/accept.xpm"
 #include "icons/famfamfam_silk_icons_v013/application_form_edit.xpm"
