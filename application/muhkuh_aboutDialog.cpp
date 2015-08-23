@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Christoph Thelen                                *
+ *   Copyright (C) 2015 by Christoph Thelen                                *
  *   doc_bacardi@users.sourceforge.net                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,9 +24,7 @@
 #include "muhkuh_version.h"
 #include "muhkuh_aboutDialog.h"
 
-#if USE_LUA!=0
-#       include "lua.hpp"
-#endif
+#include "lua.hpp"
 
 muhkuh_aboutDialog::muhkuh_aboutDialog(wxWindow* parent, const wxString &strVersion, wxIconBundle &frameIcons)
  : wxDialog(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX|wxMAXIMIZE_BOX|wxMINIMIZE_BOX)
@@ -35,38 +33,38 @@ muhkuh_aboutDialog::muhkuh_aboutDialog(wxWindow* parent, const wxString &strVers
 	wxIcon icon;
 
 
-	// construct the title string
+	/* Construct the title string. */
 	strMsg  = _("About ");
 	strMsg += wxT(MUHKUH_APPLICATION_NAME);
 	SetTitle(strMsg);
 
-	// create the controls
+	/* Create the controls. */
 
-	// the main sizer
+	/* The main sizer. */
 	m_mainBoxSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(m_mainBoxSizer);
 
-	// the logo and app name sizer
+	/* The logo and app name sizer. */
 	m_logoSizer = new wxBoxSizer(wxHORIZONTAL);
 	m_mainBoxSizer->Add(m_logoSizer);
 
-	// create the icon
+	/* Create the icon. */
 	icon = frameIcons.GetIcon(32);
 	if( icon.IsOk()==true )
 	{
-		// create new bitmap
+		/* Create new bitmap. */
 		m_logoBitmap = new wxStaticBitmap(this, wxID_ANY, icon);
 		m_logoSizer->Add(m_logoBitmap, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 8);
 	}
-	// create the application name
+	/* Create the application name. */
 	m_appText = new wxStaticText(this, wxID_ANY, strVersion);
 	m_logoSizer->Add(m_appText, 0, wxALL|wxALIGN_CENTER_VERTICAL, 8);
 
-	// add the notebook control
+	/* Add the notebook control. */
 	m_tabs = new wxNotebook(this, wxID_ANY);
 	m_mainBoxSizer->Add(m_tabs, 1, wxEXPAND);
 
-	// add the notebook pages
+	/* Add the notebook pages. */
 	m_aboutHtml = new wxHtmlWindow(m_tabs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER);
 	setAbout(m_aboutHtml);
 	m_tabs->AddPage(m_aboutHtml, _("About"), true);
@@ -89,18 +87,17 @@ void muhkuh_aboutDialog::setAbout(wxHtmlWindow *ptHtmlWin)
 	wxString strCompiler;
 
 
-	// get the background color
+	/* Get the background color. */
 	colBg = GetBackgroundColour();
 
-	// start html document
+	/* Start html document. */
 	strMsg  = wxT("<html><body bgcolor=\"") + colBg.GetAsString(wxC2S_HTML_SYNTAX) + wxT("\">");
 
-	// describe the application here
+	/* Describe the application here. */
 	strMsg += wxT("<center>");
 	strMsg += _("Your friendly testtool with super cow powers!");
 	strMsg += wxT("<p>(c) ") wxT(MUHKUH_VERSION_YEAR) wxT(", the Muhkuh team<br>");
-	strMsg += wxT("<a href=\"http://muhkuh.sf.net\">http://muhkuh.sf.net</a><br>");
-	strMsg += wxT("<a href=\"http://www.sf.net/projects/muhkuh\">http://www.sf.net/projects/muhkuh</a><p><br>");
+	strMsg += wxT("<a href=\"https://github.com/muhkuh-sys\">https://github.com/muhkuh-sys</a><p><br>");
 	strMsg += wxT("</center>");
 
 	strMsg += _("This version uses");
@@ -121,10 +118,8 @@ void muhkuh_aboutDialog::setAbout(wxHtmlWindow *ptHtmlWin)
 #endif
 	strMsg += wxT(")<br><a href=\"http://www.wxwidgets.org\">http://www.wxwidgets.org</a></li>");
 
-#if USE_LUA!=0
 	strMsg += wxT("<li>") wxT(LUA_RELEASE) wxT(", ") wxT(LUA_COPYRIGHT) wxT(" by ") wxT(LUA_AUTHORS);
 	strMsg += wxT(")<br><a href=\"http://www.lua.org\">http://www.lua.org</a></li>");
-#endif
 
 	strMsg += wxT("<li>Silk icon set 1.3 by Mark James<br><a href=\"http://www.famfamfam.com/lab/icons/silk/\">http://www.famfamfam.com/lab/icons/silk/</a></li>");
 
@@ -132,7 +127,7 @@ void muhkuh_aboutDialog::setAbout(wxHtmlWindow *ptHtmlWin)
 
 	strMsg += _("It was compiled on ");
 
-// NOTE: append this to strOS to see multiple hits (like __LINUX__ and __UNIX__)
+/* NOTE: append this to strOS to see multiple hits (like __LINUX__ and __UNIX__). */
 
 // just a combination of other defines?
 //#ifdef __APPLE__
@@ -325,32 +320,35 @@ void muhkuh_aboutDialog::setAbout(wxHtmlWindow *ptHtmlWin)
 }
 
 
+
 void muhkuh_aboutDialog::setAuthors(wxHtmlWindow *ptHtmlWin)
 {
 	wxString strMsg;
 	wxColor colBg;
 
 
-	// get the background color
+	/* Get the background color. */
 	colBg = GetBackgroundColour();
 
-	// start html document
+	/* Start the html document. */
 	strMsg  = wxT("<html><body bgcolor=\"") + colBg.GetAsString(wxC2S_HTML_SYNTAX) + wxT("\">");
 
-	// start the list of all authors
+	/* Start the list of all authors. */
 	strMsg += wxT("<dl>");
 
-	// add one author
+	/* Add one author. */
 	strMsg += wxT("<dt>Chris</dt>");
 	strMsg += wxT("<dd><a href=\"mailto:doc_bacardi@users.sourceforge.net\">doc_bacardi@users.sourceforge.net</a><p></dd>");
+	/* Add one author. */
+	strMsg += wxT("<dt>Dizzy</dt>");
 
-	// close the list of authors
+	/* Close the list of authors. */
 	strMsg += wxT("</dl>");
 
-	// close the html document
+	/* Close the html document. */
 	strMsg += wxT("</body></html>");
 
-	// assign the page to the document
+	/* Assign the page to the document. */
 	ptHtmlWin->SetPage(strMsg);
 }
 
@@ -361,7 +359,7 @@ void muhkuh_aboutDialog::setLicense(wxHtmlWindow *ptHtmlWin)
 
 
 	strMsg = wxString::FromAscii(license);
-	// assign the page to the document
+	/* Assign the page to the document. */
 	ptHtmlWin->SetPage(strMsg);
 }
 

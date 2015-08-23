@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Christoph Thelen                                *
+ *   Copyright (C) 2015 by Christoph Thelen                                *
  *   doc_bacardi@users.sourceforge.net                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -50,5 +50,5 @@ private:
 };
 
 
-#endif	/* __MUHKUH_ABOUTDIALOG_H__ */
+#endif  /* __MUHKUH_ABOUTDIALOG_H__ */
 
