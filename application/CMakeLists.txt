@@ -29,12 +29,13 @@ SET(VAR_muhkuh_app_sources
 	muhkuh_app.cpp
 	muhkuh_available_languages.cpp
 	muhkuh_brokenPluginDialog.cpp
-	muhkuh_configDialog.cpp
 	muhkuh_config_data.cpp
+	muhkuh_configDialog.cpp
 	muhkuh_config_reposEntryDialog.cpp
 	muhkuh_copy_process.cpp
 	muhkuh_dirlistbox.cpp
 	muhkuh_flags.cpp
+	muhkuh_htmltag_lua.cpp
 	muhkuh_icons.cpp
 	muhkuh_lua.cpp
 	muhkuh_mainFrame.cpp
