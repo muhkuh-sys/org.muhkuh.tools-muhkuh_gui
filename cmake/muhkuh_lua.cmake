@@ -1,21 +1,17 @@
 #----------------------------------------------------------------------------
 #
 # Muhkuh can build modules for the Lua language. This section allows to user
-# to choose which lua version should be used - the one bundled with muhkuh,
-# or a systemwide installed lua.
-#
-# The default is to use the systemwide lua.
+# to choose which lua version should be used.
 #
 
-OPTION(USE_SYSTEM_LUA "Use the systemwide installed lua version instead of the muhkuh internal one." ON)
-IF(USE_SYSTEM_LUA)
-	# Use the system version.
+# Use the MBS LUA version on Windows.
+IF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows"))
+	FIND_PACKAGE(org.muhkuh.lua-lua51 REQUIRED)
+	SET(LUA51_FOUND 1)
+	GET_TARGET_PROPERTY(LUA_LIBRARIES org.muhkuh.lua-lua51::TARGET_lualib LOCATION)
+	GET_TARGET_PROPERTY(LUA_INCLUDE_DIR org.muhkuh.lua-lua51::TARGET_lualib INTERFACE_INCLUDE_DIRECTORIES)
+	SET(LUA_VERSION_STRING ${org.muhkuh.lua-lua51_VERSION})
+ELSE((${CMAKE_SYSTEM_NAME} STREQUAL "Windows"))
 	FIND_PACKAGE(Lua51 REQUIRED)
-ELSE(USE_SYSTEM_LUA)
-	# Use the internal lua version.
-	SET(LUA51_FOUND TRUE)
-	SET(LUA_LIBRARIES lualib)
-	SET(LUA_INCLUDE_DIR ${CMAKE_HOME_DIRECTORY}/lua/lib/lua-5.1.4/src/)
-ENDIF(USE_SYSTEM_LUA)
-
+ENDIF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows"))
 
