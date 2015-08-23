@@ -1,55 +1,28 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
-PROJECT("muhkuh")
-
-FIND_PACKAGE(SWIG REQUIRED)
-INCLUDE(${SWIG_USE_FILE})
+PROJECT("muhkuh_gui")
 
 # This is the list of the wxwidgets modules required for the application.
-# Use static linking.
-SET(wxWidgets_STATIC ON)
-SET(wxWidgets_USE_STATIC ON)
-FIND_PACKAGE(wxWidgets 2.9 REQUIRED html adv aui net xml core base)
+FIND_PACKAGE(wxWidgets 3.0 REQUIRED html adv aui net xml core base)
 INCLUDE(${wxWidgets_USE_FILE})
-
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-INCLUDE_DIRECTORIES(${wxWidgets_INCLUDE_DIRS})
-IF(${LUA51_FOUND})
-	INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
-ENDIF(${LUA51_FOUND})
 
 
 #----------------------------------------------------------------------------
 #
-# Build the muhkuh application.
+# Build the muhkuh GUI.
 #
 
 # Set the windows specific sources. This will be empty on other platforms.
 IF(WIN32)
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/templates/muhkuh.rc ${CMAKE_CURRENT_SOURCE_DIR}/muhkuh.rc)
-
-SET(muhkuh_app_win_SOURCES
-	muhkuh.rc
-)
+	CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/templates/muhkuh.rc ${CMAKE_CURRENT_BINARY_DIR}/muhkuh.rc @ONLY)
+	
+	SET(VAR_muhkuh_app_platform_sources
+		${CMAKE_CURRENT_BINARY_DIR}/muhkuh.rc
+	)
 ENDIF(WIN32)
 
 
-IF(${LUA51_FOUND})
-	# Lua found -> use lua.
-	SET(muhkuh_app_DEFINITIONS_lua USE_LUA=1)
-
-	# Set the additional sources needed besides the generated wrapper.
-	SET(muhkuh_app_SOURCES_lua
-		muhkuh_htmltag_lua.cpp
-	)
-	SET(muhkuh_app_HEADERS_lua
-		muhkuh_lua.h
-	)
-	SET(muhkuh_app_LIBS_lua ${LUA_LIBRARIES})
-ENDIF(${LUA51_FOUND})
-
-
-SET(muhkuh_app_SOURCES
+SET(VAR_muhkuh_app_sources
 	growbuffer.cpp
 	license.cpp
 	muhkuh_aboutDialog.cpp
@@ -74,7 +47,7 @@ SET(muhkuh_app_SOURCES
 	readFsFile.cpp
 )
 
-SET(muhkuh_app_HEADERS
+SET(VAR_muhkuh_app_headers
 	growbuffer.h
 	license.h
 	muhkuh_aboutDialog.h
@@ -102,28 +75,44 @@ SET(muhkuh_app_HEADERS
 )
 
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/templates/muhkuh_version.h ${CMAKE_CURRENT_SOURCE_DIR}/muhkuh_version.h)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/templates/muhkuh_version.h ${CMAKE_CURRENT_BINARY_DIR}/version/muhkuh_version.h)
 
 
 # Build the executable.
-ADD_EXECUTABLE(muhkuh WIN32
-	${muhkuh_app_SOURCES}
-	${muhkuh_app_SOURCES_lua}
-	${muhkuh_app_HEADERS}
-	${muhkuh_app_HEADERS_lua})
+ADD_EXECUTABLE(TARGET_muhkuh_gui WIN32
+	${VAR_muhkuh_app_sources}
+	${VAR_muhkuh_app_headers}
+	${VAR_muhkuh_app_platform_sources}
+)
 
-SET_PROPERTY(TARGET muhkuh PROPERTY COMPILE_DEFINITIONS
-	${wxWidgets_DEFINITIONS}
-	${muhkuh_app_DEFINITIONS_lua})
+TARGET_INCLUDE_DIRECTORIES(TARGET_muhkuh_gui
+                           PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/version ${LUA_INCLUDE_DIR})
+TARGET_COMPILE_DEFINITIONS(TARGET_muhkuh_gui
+                           PRIVATE ${wxWidgets_DEFINITIONS})
 
-TARGET_LINK_LIBRARIES(muhkuh
-	${wxWidgets_LIBRARIES}
-	${muhkuh_app_LIBS_lua})
+TARGET_LINK_LIBRARIES(TARGET_muhkuh_gui
+                      PRIVATE ${wxWidgets_LIBRARIES} ${LUA_LIBRARIES})
 
-SET_TARGET_PROPERTIES(muhkuh PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
+# Set the name of the output file to "muhkuh".
+SET_TARGET_PROPERTIES(TARGET_muhkuh_gui PROPERTIES OUTPUT_NAME "muhkuh")
+
+# On mingw link all compiler libraries static.
+IF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
+	SET_PROPERTY(TARGET TARGET_muhkuh_gui PROPERTY LINK_FLAGS "-static -static-libgcc -static-libstdc++")
+ENDIF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
+
+# Add tests for this module.
+IF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
+	# Here are the MinGW specific tests.
+	ADD_TEST(NAME romloader_uart_MinGW_DLL_dependencies
+	         COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tests/mingw_dll_dependencies.py $<TARGET_FILE:TARGET_muhkuh_gui>)
+ENDIF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
+
 
 
 # Copy the application.
-INSTALL(TARGETS muhkuh DESTINATION ${INSTALL_DIR_EXECUTABLES})
+INSTALL(TARGETS TARGET_muhkuh_gui
+        DESTINATION ${INSTALL_DIR_EXECUTABLES})
 # Copy the tips file.
-INSTALL(FILES ${CMAKE_HOME_DIRECTORY}/bin/muhkuh_tips.txt DESTINATION ${INSTALL_DIR_EXECUTABLES})
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/muhkuh_tips.txt
+        DESTINATION ${INSTALL_DIR_EXECUTABLES})

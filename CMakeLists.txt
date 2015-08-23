@@ -1,37 +1,20 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
-PROJECT("muhkuh")
+PROJECT("muhkuh_gui")
 
 
-# Enable tests (see here for details: http://www.vtk.org/Wiki/CMake/Testing_With_CTest)
+# Enable tests.
 ENABLE_TESTING()
-
-# Generate a version number from a file or VCS.
-INCLUDE(cmake/muhkuh_version.cmake)
-
-
-# Set some installation folders.
-INCLUDE(cmake/muhkuh_installation_folders.cmake)
-
-#----------------------------------------------------------------------------
-#
-# Find all packages.
-#
-
-# Swig is required to generate the bindings.
-FIND_PACKAGE(SWIG REQUIRED)
-
-# Python is used for some test scripts.
-FIND_PACKAGE(PythonInterp REQUIRED)
-
-# TODO: Show a summary with FeatureSummary .
 
 
 # Select the LUA version.
 INCLUDE(cmake/muhkuh_lua.cmake)
 
-# Add a custom target for the swig runtime for LUA.
-INCLUDE(cmake/muhkuh_swig_lua_runtime.cmake)
+# Generate a version number from a file.
+INCLUDE(cmake/muhkuh_version.cmake)
+
+# Set some installation folders.
+INCLUDE(cmake/muhkuh_installation_folders.cmake)
 
 
 #----------------------------------------------------------------------------
@@ -40,30 +23,24 @@ INCLUDE(cmake/muhkuh_swig_lua_runtime.cmake)
 #
 
 # Microsoft: Do not show msvs security warnings about unsafe functions.
-if(${CMAKE_BUILD_TOOL} MATCHES "(msdev|VCExpress|devenv|nmake)")
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+IF(${CMAKE_BUILD_TOOL} MATCHES "(msdev|VCExpress|devenv|nmake)")
+	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
+	ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE)
 ENDIF(${CMAKE_BUILD_TOOL} MATCHES "(msdev|VCExpress|devenv|nmake)")
 
 
 # Microsoft: Set warning level to 2.
-if(${CMAKE_BUILD_TOOL} MATCHES "(msdev|VCExpress|devenv)")
-	add_definitions(/W2)
+IF(${CMAKE_BUILD_TOOL} MATCHES "(msdev|VCExpress|devenv)")
+	ADD_DEFINITIONS(/W2)
 ENDIF(${CMAKE_BUILD_TOOL} MATCHES "(msdev|VCExpress|devenv)")
 
 
 #----------------------------------------------------------------------------
 #
 # Include the projects in the subdirectories.
-# NOTE: build the external components first. Many parts depend on them.
 #
 
-add_subdirectory(external)
-
-#add_subdirectory(application)
-add_subdirectory(lua)
-add_subdirectory(modules)
-add_subdirectory(plugins)
+ADD_SUBDIRECTORY(application)
 
 
 #----------------------------------------------------------------------------
