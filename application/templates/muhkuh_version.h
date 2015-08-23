@@ -1,6 +1,5 @@
-
-#ifndef __muhkuh_version_h__
-#define __muhkuh_version_h__
+#ifndef __MUHKUH_VERSION_H__
+#define __MUHKUH_VERSION_H__
 
 #define MUHKUH_APPLICATION_NAME "Muhkuh"
 #define MUHKUH_VERSION_MAJ @MUHKUH_VERSION_MAJ@
@@ -10,4 +9,5 @@
 
 #define MUHKUH_VERSION_STRING "@MUHKUH_VERSION_MAJ@.@MUHKUH_VERSION_MIN@.@MUHKUH_VERSION_SUB@"
 
-#endif	/* __muhkuh_version_h__ */
+#endif  /* __MUHKUH_VERSION_H__ */
+
