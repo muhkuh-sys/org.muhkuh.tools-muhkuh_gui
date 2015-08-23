@@ -49,9 +49,7 @@
 #include "muhkuh_testTreeItemData.h"
 #include "muhkuh_wrap_xml.h"
 
-#if USE_LUA!=0
-#       include "muhkuh_lua.h"
-#endif
+#include "muhkuh_lua.h"
 
 
 //-------------------------------------

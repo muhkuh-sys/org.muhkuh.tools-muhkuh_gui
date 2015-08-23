@@ -238,12 +238,10 @@ muhkuh_mainFrame::muhkuh_mainFrame(void)
 
 	InitDialog();
 
-#if USE_LUA!=0
 	/* Register the config data. */
 	lua_muhkuh_register_config_data(m_ptConfigData);
 	/* Open a new lua state. */
 	lua_muhkuh_create_default_state();
-#endif
 }
 
 
@@ -251,10 +249,8 @@ muhkuh_mainFrame::~muhkuh_mainFrame(void)
 {
 	write_config();
 
-#if USE_LUA!=0
 	/* Close any open lua state. */
 	lua_muhkuh_close_default_state();
-#endif
 
 	// delete the help controller
 	if( m_ptHelp!=NULL )
@@ -283,9 +279,7 @@ muhkuh_mainFrame::~muhkuh_mainFrame(void)
 	if( m_ptConfigData!=NULL )
 	{
 		delete m_ptConfigData;
-#if USE_LUA!=0
 		lua_muhkuh_register_config_data(NULL);
-#endif
 	}
 
 	m_auiMgr.UnInit();
@@ -868,13 +862,11 @@ void muhkuh_mainFrame::OnIdle(wxIdleEvent& event)
 		break;
 	}
 
-#if USE_LUA!=0
 	/* Get the lua memory consumption in kilobytes. */
 	iLuaMemKb = lua_muhkuh_get_memory_usage(NULL);
 	tLuaMemBytes = (unsigned long)(iLuaMemKb*1024);
 	strMemStatus.Printf(_("Lua uses %s ."), wxFileName::GetHumanReadableSize(tLuaMemBytes, _("an unknown amount of bytes"), 1, wxSIZE_CONV_TRADITIONAL));
 	strStatus += strMemStatus;
-#endif
 
 	/* Does the status bar already exist? */
 	ptStatusBar = GetStatusBar();
@@ -969,11 +961,9 @@ void muhkuh_mainFrame::OnConfigDialog(wxCommandEvent& WXUNUSED(event))
 		/* FIXME: this writes the old config, but why? */
 		write_config();
 
-#if USE_LUA!=0
 		/* Replace the default lua state. */
 		lua_muhkuh_register_config_data(m_ptConfigData);
 		lua_muhkuh_create_default_state();
-#endif
 
 		reloadWelcomePage();
 		reloadDetailsPage();
